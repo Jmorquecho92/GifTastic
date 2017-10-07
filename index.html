@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Emotional Buttons</title>
+  <link rel="stylesheet" type="text/css" href="emotion.css">
+</head>
+<body>
+<div class="jumbotron">
+        <div class="container">
+            <h1>World of Emotions!</h1>
+        </div>
+    </div>
+     
+    <div class="container">
+        <div class="col-xs-9 col-sm-9 col-md-9 col-lg-9">
+            
+            <div id="gifsView"></div>
+        </div>
+         
+        <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3">
+            <form id="gif-form" role="form">
+                <h2><legend>Emotions!</legend></h2>
+                <div class="form-group">
+                    
+                    <input type="text" id="emotion-input">
+                </div>
+                <input id="addGif" type="submit" value="Add an Emotion" class="btn btn-primary">
+                <input id="removeGif" type="submit" value="Remove last Action" class="btn btn-primary">
+            </form>    
+        </div>
+    </div>
+  <button data-emotion="Fear">Fear</button>
+  <button data-emotion="Happy">Happy</button>
+  <button data-emotion="Sad">Sad</button>
+  <button data-emotion="Confused">Confused</button>
+  <button data-emotion="Excited">Excited</button>
+  <button data-emotion="Angry">Angry</button>
+  <div id="gifs-appear-here">
+  </div>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"</script>
+  <script type="text/javascript" src="script.js"</script>
+  <script>
+    $("button").on("click", function() {
+      
+      var emotion = $(this).attr("data-emotion");
+      
+      var queryURL = "https://api.giphy.com/v1/gifs/search?q=" +
+        emotion + "&api_key=dc6zaTOxFJmzC&limit=10";
+      
+      $.ajax({
+          url: queryURL,
+          method: "GET"
+        })
+        
+        .done(function(response) {
+          console.log(queryURL);
+          console.log(response);
+          
+          var results = response.data;
+          
+          for (var i = 0; i < results.length; i++) {
+            
+            var emotionDiv = $("<div>");
+            
+            var p = $("<p>").text("Rating: " + results[i].rating);
+            
+            var emotionImage = $("<img>");
+            
+            emotionImage.attr("src", results[i].images.fixed_height.url);
+            
+            emotionDiv.append(p);
+            emotionDiv.append(emotionImage);
+            
+            $("#gifs-appear-here").prepend(emotionDiv);
+          }
+        });
+    });
+  </script>
+</body>
+</html>
